@@ -5,6 +5,8 @@ import Home from "../pages/public/Home/Home";
 import About from "../pages/public/about/About";
 import Shop from "../pages/public/shop/Shop";
 import Contact from "../pages/public/contact/Contact";
+import Cart from "../pages/public/cart/Cart";
+import ProductDetails from "../pages/public/products/ProductDetails";
 
 export const router = createBrowserRouter([
   {
@@ -27,6 +29,14 @@ export const router = createBrowserRouter([
         path: "about",
         element: <About />,
       },
+      {
+        path:'cart',
+        element:<Cart></Cart>
+      },
+      {
+        path:'product/:id',
+        element:<ProductDetails/>
+      }
     ],
   },
 ]);
