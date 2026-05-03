@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { ShoppingBag, User, Menu, Search, X } from "lucide-react";
+
+import { ShoppingBag, User, Menu, Search,  } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 import {
@@ -46,7 +46,7 @@ const NavLinks = ({ onClick }: { onClick?: () => void }) => {
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  // const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const user = { name: "Niloy" };
 
