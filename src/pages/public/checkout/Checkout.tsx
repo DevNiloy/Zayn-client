@@ -118,7 +118,14 @@ const CheckoutPage = () => {
       });
 
       const payload = {
-        customer: formData,
+        customer: {
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+          address: formData.address,
+          city: formData.city,
+          zipCode: formData.zipCode,
+        },
         orderItems: items
           .filter((item) => isValidObjectId(String(item.id)))
           .map((item) => ({
