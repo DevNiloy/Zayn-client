@@ -7,7 +7,7 @@ import Swal from "sweetalert2"; // SweetAlert2 Import
 
 import {
   // LayoutDashboard,
-  ShoppingBag,
+  // ShoppingBag,
   PlusCircle,
   Layers,
   // Users,
