@@ -3,11 +3,7 @@ import { NavLink, useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 import {
   DropdownMenu,
@@ -76,16 +72,19 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 w-full z-50 bg-black/90 backdrop-blur-md border-b border-white/5">
       <div className="container mx-auto flex items-center justify-between h-20 px-6 gap-4">
-
         {/* Logo */}
-        <NavLink to="/" className="flex flex-col items-center leading-none shrink-0">
-          <span className="text-2xl font-serif tracking-[0.3em] text-white">ZAYN</span>
+        <NavLink
+          to="/"
+          className="flex flex-col items-center leading-none shrink-0"
+        >
+          <span className="text-2xl font-serif tracking-[0.3em] text-white">
+            ZAYN
+          </span>
           <span className="text-lg font-serif text-white/80 mt-1">زين</span>
         </NavLink>
 
         {/* Desktop */}
         <div className="hidden md:flex items-center justify-between flex-1 ml-10">
-
           {/* Links */}
           <div className="flex items-center gap-8">
             <NavLinks />
@@ -110,7 +109,6 @@ const Navbar = () => {
 
         {/* RIGHT */}
         <div className="flex items-center gap-4 text-white/70">
-
           {/* CART */}
           <Link to="/cart">
             <button className="relative hover:text-white transition-colors cursor-pointer">
@@ -126,7 +124,6 @@ const Navbar = () => {
 
           {/* USER */}
           <div className="hidden md:block">
-
             {user?.role === "ADMIN" ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -157,7 +154,7 @@ const Navbar = () => {
               </button>
             ) : (
               <button
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/auth")}
                 className="text-xs uppercase tracking-widest hover:text-white"
               >
                 Login
@@ -167,9 +164,11 @@ const Navbar = () => {
 
           {/* MOBILE */}
           <div className="md:hidden flex items-center gap-4">
-
             {user && (
-              <button onClick={() => navigate("/dashboard")} className="hover:text-white">
+              <button
+                onClick={() => navigate("/dashboard")}
+                className="hover:text-white"
+              >
                 <User size={20} strokeWidth={1} />
               </button>
             )}
@@ -181,15 +180,22 @@ const Navbar = () => {
                 </button>
               </SheetTrigger>
 
-              <SheetContent side="right" className="bg-black text-white border-l border-white/10 w-[300px]">
-
+              <SheetContent
+                side="right"
+                className="bg-black text-white border-l border-white/10 w-[300px]"
+              >
                 <div className="mb-8 mt-4">
-                  <span className="text-xl font-serif tracking-[0.3em]">ZAYN</span>
+                  <span className="text-xl font-serif tracking-[0.3em]">
+                    ZAYN
+                  </span>
                 </div>
 
                 {/* SEARCH MOBILE */}
                 <div className="relative mb-8 group">
-                  <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30" />
+                  <Search
+                    size={18}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30"
+                  />
                   <Input
                     value={keyword}
                     onChange={(e) => setKeyword(e.target.value)}
@@ -205,7 +211,6 @@ const Navbar = () => {
                 </div>
 
                 <div className="mt-8 pt-8 border-t border-white/5 space-y-4">
-
                   <Link to="/cart">
                     <button className="flex items-center gap-3 text-sm text-neutral-400 hover:text-white cursor-pointer">
                       <ShoppingBag size={18} />
@@ -215,7 +220,7 @@ const Navbar = () => {
 
                   {!user ? (
                     <button
-                      onClick={() => navigate("/login")}
+                      onClick={() => navigate("/auth")}
                       className="block text-sm text-neutral-400 hover:text-white"
                     >
                       Login
@@ -231,7 +236,6 @@ const Navbar = () => {
                 </div>
               </SheetContent>
             </Sheet>
-
           </div>
         </div>
       </div>
