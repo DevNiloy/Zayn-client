@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
-    // Changed to reflect "Edit"
+  // Changed to reflect "Edit"
   Image as ImageIcon,
   Tag,
   Layers,
@@ -19,20 +19,24 @@ import {
 } from "lucide-react";
 import Swal from "sweetalert2";
 import { useGetNestedCategoriesQuery } from "@/redux/api/categoryApi";
-import { useGetProductDetailsQuery, useUpdateProductMutation } from "@/redux/api/productApi";
+import {
+  useGetProductDetailsQuery,
+  useUpdateProductMutation,
+} from "@/redux/api/productApi";
 
 const EditProduct = () => {
   const { id } = useParams();
-  console.log(id)
+  console.log(id);
   const navigate = useNavigate();
 
   // এপিআই কলস 🔌
-  const { data: product, isLoading: isProductLoading } = useGetProductDetailsQuery(id as string);
-  console.log(product)
+  const { data: product, isLoading: isProductLoading } =
+    useGetProductDetailsQuery(id as string);
+  console.log(product);
   const { data: categoriesData } = useGetNestedCategoriesQuery();
   const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
 
-  // স্টেট ম্যানেজমেন্ট 
+  // স্টেট ম্যানেজমেন্ট
   const [formData, setFormData] = useState<any>({
     title: "",
     desc: "",
@@ -66,15 +70,19 @@ const EditProduct = () => {
       setExistingImages(product.images || []);
     }
   }, [product]);
-console.log(formData)
-console.log(product)
+  console.log(formData);
+  console.log(product);
   // ক্যাটাগরি অনুযায়ী সাব-ক্যাটাগরি ফিল্টার 🔍
   const selectedCat = useMemo(() => {
     return categoriesData?.data?.find((c: any) => c._id === formData.category);
   }, [formData.category, categoriesData]);
 
   // হ্যান্ডলার ফাংশন ⌨️
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
     const { name, value } = e.target;
     setFormData((prev: any) => ({
       ...prev,
@@ -84,7 +92,10 @@ console.log(product)
   };
 
   const handleToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev: any) => ({ ...prev, [e.target.name]: e.target.checked }));
+    setFormData((prev: any) => ({
+      ...prev,
+      [e.target.name]: e.target.checked,
+    }));
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -118,10 +129,19 @@ console.log(product)
 
     try {
       await updateProduct({ id: id as string, formData: data }).unwrap();
-      Swal.fire({ icon: "success", title: "Product Updated!", timer: 2000, showConfirmButton: false });
-      navigate("/admin/all-product");
+      Swal.fire({
+        icon: "success",
+        title: "Product Updated!",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+      navigate("/adminpannel/all-product");
     } catch (err: any) {
-      Swal.fire("Error", err?.data?.message || "Something went wrong!", "error");
+      Swal.fire(
+        "Error",
+        err?.data?.message || "Something went wrong!",
+        "error",
+      );
     }
   };
 
@@ -140,15 +160,19 @@ console.log(product)
         {/* Header Section */}
         <div className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-4">
-            <button 
+            <button
               onClick={() => navigate(-1)}
               className="p-3 bg-white border border-gray-100 rounded-2xl text-gray-400 hover:text-indigo-600 transition-all shadow-sm"
             >
               <ArrowLeft size={24} />
             </button>
             <div>
-              <h1 className="text-3xl font-black text-gray-900 tracking-tight uppercase">Edit Product</h1>
-              <p className="text-gray-500 font-medium">Modify existing product details</p>
+              <h1 className="text-3xl font-black text-gray-900 tracking-tight uppercase">
+                Edit Product
+              </h1>
+              <p className="text-gray-500 font-medium">
+                Modify existing product details
+              </p>
             </div>
           </div>
           <button
@@ -156,11 +180,20 @@ console.log(product)
             disabled={isUpdating}
             className="hidden md:flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-2xl font-bold transition-all shadow-lg shadow-indigo-200 disabled:opacity-50"
           >
-            {isUpdating ? "Saving..." : <><Save size={20} /> Update Product</>}
+            {isUpdating ? (
+              "Saving..."
+            ) : (
+              <>
+                <Save size={20} /> Update Product
+              </>
+            )}
           </button>
         </div>
 
-        <form className="grid grid-cols-1 lg:grid-cols-12 gap-8" onSubmit={handleSubmit}>
+        <form
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8"
+          onSubmit={handleSubmit}
+        >
           {/* Left Column: Core Info */}
           <div className="lg:col-span-8 space-y-6">
             <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm space-y-6">
@@ -179,7 +212,8 @@ console.log(product)
 
               <div className="space-y-2">
                 <label className="text-xs font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                  <AlignLeft size={14} className="text-indigo-600" /> Description
+                  <AlignLeft size={14} className="text-indigo-600" />{" "}
+                  Description
                 </label>
                 <textarea
                   name="desc"
@@ -209,7 +243,8 @@ console.log(product)
               </div>
               <div className="space-y-2">
                 <label className="text-xs font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                  <BadgePercent size={14} className="text-indigo-600" /> Discount
+                  <BadgePercent size={14} className="text-indigo-600" />{" "}
+                  Discount
                 </label>
                 <input
                   name="discountPrice"
@@ -251,7 +286,9 @@ console.log(product)
                 >
                   <option value="">Select Category</option>
                   {categoriesData?.data.map((cat: any) => (
-                    <option key={cat._id} value={cat._id}>{cat.name}</option>
+                    <option key={cat._id} value={cat._id}>
+                      {cat.name}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -269,7 +306,9 @@ console.log(product)
                 >
                   <option value="">Select Sub-category</option>
                   {selectedCat?.subcategories?.map((sub: any) => (
-                    <option key={sub._id} value={sub._id}>{sub.name}</option>
+                    <option key={sub._id} value={sub._id}>
+                      {sub.name}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -277,12 +316,21 @@ console.log(product)
               <div className="flex items-center justify-between py-2">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-amber-50 rounded-lg text-amber-600">
-                    <Star size={18} fill={formData.bestSeller ? "currentColor" : "none"} />
+                    <Star
+                      size={18}
+                      fill={formData.bestSeller ? "currentColor" : "none"}
+                    />
                   </div>
                   <p className="text-sm font-bold text-gray-700">Best Seller</p>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" name="bestSeller" checked={formData.bestSeller} onChange={handleToggle} className="sr-only peer" />
+                  <input
+                    type="checkbox"
+                    name="bestSeller"
+                    checked={formData.bestSeller}
+                    onChange={handleToggle}
+                    className="sr-only peer"
+                  />
                   <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-indigo-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
                 </label>
               </div>
@@ -291,24 +339,47 @@ console.log(product)
             {/* Gallery Section */}
             <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm">
               <label className="text-xs font-black text-gray-400 uppercase tracking-widest flex items-center gap-2 mb-4">
-                <ImageIcon size={14} className="text-indigo-600" /> Product Gallery
+                <ImageIcon size={14} className="text-indigo-600" /> Product
+                Gallery
               </label>
-              
+
               <div className="grid grid-cols-3 gap-3 mb-4">
                 {/* Existing Images from Server */}
                 {existingImages.map((src, index) => (
-                  <div key={`old-${index}`} className="group relative aspect-square rounded-xl overflow-hidden border-2 border-gray-50 shadow-sm">
-                    <img src={`${import.meta.env.VITE_API_URL}${src}`} className="w-full h-full object-cover" alt="Old" />
-                    <button type="button" onClick={() => removeExistingImage(src)} className="absolute inset-0 bg-red-500/80 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity">
+                  <div
+                    key={`old-${index}`}
+                    className="group relative aspect-square rounded-xl overflow-hidden border-2 border-gray-50 shadow-sm"
+                  >
+                    <img
+                      src={`${import.meta.env.VITE_API_URL}${src}`}
+                      className="w-full h-full object-cover"
+                      alt="Old"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeExistingImage(src)}
+                      className="absolute inset-0 bg-red-500/80 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity"
+                    >
                       <Trash2 size={20} />
                     </button>
                   </div>
                 ))}
                 {/* New Previews */}
                 {previews.map((url, i) => (
-                  <div key={url} className="group relative aspect-square rounded-xl overflow-hidden border-2 border-indigo-100 shadow-sm">
-                    <img src={url} className="w-full h-full object-cover" alt="preview" />
-                    <button type="button" onClick={() => removeNewImage(i)} className="absolute inset-0 bg-red-500/80 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity">
+                  <div
+                    key={url}
+                    className="group relative aspect-square rounded-xl overflow-hidden border-2 border-indigo-100 shadow-sm"
+                  >
+                    <img
+                      src={url}
+                      className="w-full h-full object-cover"
+                      alt="preview"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeNewImage(i)}
+                      className="absolute inset-0 bg-red-500/80 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity"
+                    >
                       <X size={20} />
                     </button>
                   </div>
@@ -317,9 +388,16 @@ console.log(product)
 
               {existingImages.length + images.length < 5 && (
                 <div className="relative group border-4 border-dashed border-gray-50 rounded-2xl p-6 hover:border-indigo-100 transition-all text-center">
-                  <input type="file" multiple onChange={handleImageChange} className="absolute inset-0 opacity-0 cursor-pointer" />
+                  <input
+                    type="file"
+                    multiple
+                    onChange={handleImageChange}
+                    className="absolute inset-0 opacity-0 cursor-pointer"
+                  />
                   <ImageIcon className="mx-auto text-indigo-200" size={32} />
-                  <p className="text-xs font-bold text-gray-400 mt-2">Add More Images</p>
+                  <p className="text-xs font-bold text-gray-400 mt-2">
+                    Add More Images
+                  </p>
                 </div>
               )}
             </div>
@@ -329,7 +407,13 @@ console.log(product)
               disabled={isUpdating}
               className="md:hidden w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white py-5 rounded-2xl font-bold transition-all shadow-lg"
             >
-              {isUpdating ? "Updating..." : <><Save size={20} /> Save Changes</>}
+              {isUpdating ? (
+                "Updating..."
+              ) : (
+                <>
+                  <Save size={20} /> Save Changes
+                </>
+              )}
             </button>
           </div>
         </form>
