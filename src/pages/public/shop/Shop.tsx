@@ -30,6 +30,7 @@ const LIMIT = 10;
 
 export default function Shop() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const img_url = import.meta.env.VITE_IMG_URL;
 
   const category = searchParams.get("category") || "";
   const page = Number(searchParams.get("page") || 1);
@@ -190,7 +191,7 @@ export default function Shop() {
                     <div className="card group bg-[#151515] border border-white/5 rounded-2xl overflow-hidden hover:border-white/20 transition">
                       <div className="overflow-hidden">
                         <img
-                          src={`http://localhost:5000${p.images?.[0]}`}
+                          src={`${img_url}${p.images?.[0]}`}
                           className="w-full h-72 object-cover group-hover:scale-110 transition duration-700"
                         />
                       </div>
