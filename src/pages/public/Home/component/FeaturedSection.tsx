@@ -124,7 +124,7 @@ export const FeaturedSection = () => {
               </p>
 
               <Link
-                to={`https://localhost:5173/checkout?productId=${id}&name=${name}&price=${price}&img=${api_url}${img}`}
+                to={`https://zayn-bd.com/checkout?productId=${id}&name=${name}&price=${price}&img=${api_url}${img}`}
                 className="cursor-pointer"
               >
                 <button className="flex items-center gap-3 text-xs uppercase text-white font-bold hover:gap-6 transition-all border-b border-white/20 pb-2 w-fit">
