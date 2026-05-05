@@ -35,17 +35,17 @@ function AddProduct() {
   // এপিআই হুকস 🔌
   const { data: categoriesData } = useGetNestedCategoriesQuery();
   const [createProduct, { isLoading }] = useCreateProductMutation();
-const initialState: IFormData = {
-  title: "",
-  desc: "",
-  price: "",
-  discountPrice: "",
-  category: "",
-  subCategory: "",
-  stockQuantity: "",
-  stock: "available",
-  isBestSeller: false,
-};
+  const initialState: IFormData = {
+    title: "",
+    desc: "",
+    price: "",
+    discountPrice: "",
+    category: "",
+    subCategory: "",
+    stockQuantity: "",
+    stock: "available",
+    isBestSeller: false,
+  };
   // স্টেট ম্যানেজমেন্ট 🏗️
   const [formData, setFormData] = useState<IFormData>({
     title: "",

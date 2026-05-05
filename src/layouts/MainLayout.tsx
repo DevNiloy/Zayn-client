@@ -14,9 +14,7 @@ function MainLayout() {
           <Outlet />
           <Footer />
         </AppWrapper>
-        
       </div>
-      
     </div>
   );
 }

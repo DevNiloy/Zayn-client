@@ -1,63 +1,54 @@
 import { useState } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
-import Swal from "sweetalert2"; // SweetAlert2 Import
-
-// AuthSlice path check korun
-
-import {
-  // LayoutDashboard,
-  // ShoppingBag,
-  PlusCircle,
-  Layers,
-  // Users,
-  // Image as ImageIcon,
-  // Megaphone,
-  LogOut,
-  Menu,
-  X,
-  Loader2,
-} from "lucide-react";
+import { PlusCircle, Layers, LogOut, Menu, X, Loader2 } from "lucide-react";
 import { useGetMeQuery, useLogoutMutation } from "@/redux/api/authApi";
 
 const AdminLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
 
   // API Logout Mutation Hook
   const [logoutApi, { isLoading: isLoggingOut }] = useLogoutMutation();
   const { data: user } = useGetMeQuery(undefined);
-  // console.log(user.image)
 
-  // --- Logout Handler with SweetAlert2 ---
+  // --- Zara Vibe Dark Toast Configuration ---
+  const zaraTheme = {
+    background: "#121212",
+    color: "#ffffff",
+    confirmButtonColor: "#ffffff",
+    cancelButtonColor: "transparent",
+    customClass: {
+      popup: "border border-white/10 rounded-none shadow-2xl font-serif",
+      confirmButton:
+        "text-black bg-white px-8 py-2 rounded-none uppercase tracking-widest text-[10px] font-bold border-none",
+      cancelButton:
+        "text-white border border-white/20 px-8 py-2 rounded-none uppercase tracking-widest text-[10px] font-bold ml-2",
+      title: "text-lg italic tracking-tight",
+    },
+    buttonsStyling: false,
+  };
+
+  // --- Logout Handler with Zara Theme Toast ---
   const handleLogout = async () => {
-    // Confirmation Dialog
     const result = await Swal.fire({
+      ...zaraTheme,
       title: "Are you sure?",
       text: "You will be logged out of the admin panel!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#1F5E3B",
-      cancelButtonColor: "#d33",
       confirmButtonText: "Yes, logout!",
-      background: "#fff",
-      color: "#1A2E1A",
     });
 
     if (result.isConfirmed) {
       try {
-        // 1. Call the logout API (Server-side)
         await logoutApi(undefined).unwrap();
-
-        // 2. Clear Redux Auth State (Client-side)
-
-        // 3. Clear Token from LocalStorage
         localStorage.removeItem("token");
 
-        // 4. Success Message & Redirect
         Swal.fire({
+          ...zaraTheme,
           title: "Logged Out!",
           text: "You have been logged out successfully.",
           icon: "success",
@@ -68,13 +59,11 @@ const AdminLayout = () => {
         navigate("/", { replace: true });
       } catch (error: any) {
         console.error("Logout Error:", error);
-
-        // Error holeo safety-r jonno local state clear kore redirect kora bhalo
-
         localStorage.removeItem("token");
         navigate("/");
 
         Swal.fire({
+          ...zaraTheme,
           title: "Logged Out",
           text: "Session cleared.",
           icon: "info",
@@ -86,15 +75,11 @@ const AdminLayout = () => {
   };
 
   const menuItems = [
-    // index রাউটের জন্য সরাসরি বেস পাথ
-    // { icon: <LayoutDashboard size={20} />, label: "Overview", path: `/adminpannel` },
-
     {
       icon: <PlusCircle size={20} />,
       label: "Add Product",
       path: `/adminpannel/add-product`,
     },
-    // { icon: <ShoppingBag size={20} />, label: "Orders", path: `/adminpannel/orders` },
     {
       icon: <PlusCircle size={20} />,
       label: "All Product",
@@ -108,36 +93,36 @@ const AdminLayout = () => {
   ];
 
   return (
-    <div className="flex min-h-screen bg-[#F8FAF8] font-sans">
+    <div className="flex min-h-screen bg-[#0f0f0f] text-white font-serif">
       {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/40 z-40 lg:hidden backdrop-blur-sm transition-opacity"
+          className="fixed inset-0 bg-black/60 z-40 lg:hidden backdrop-blur-md transition-opacity"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar - Dark Aesthetic */}
       <aside
         className={`
-        fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-gray-100 p-6 transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0
+        fixed inset-y-0 left-0 z-50 w-72 bg-[#121212] border-r border-white/5 p-6 transform transition-transform duration-500 ease-in-out lg:relative lg:translate-x-0
         ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
       `}
       >
         {/* Logo Area */}
-        <div className="mb-10 px-4 flex justify-between items-center">
+        <div className="mb-12 px-4 flex justify-between items-center">
           <div>
             <Link to={"/"}>
-              <h1 className="text-2xl font-black text-[#1F5E3B] tracking-tighter">
-                HALAL JPN
+              <h1 className="text-3xl font-black text-white tracking-tighter italic">
+                Zayn
               </h1>
             </Link>
-            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em]">
-              Admin Panel
+            <p className="text-[9px] text-white/40 font-bold uppercase tracking-[0.4em] mt-1">
+              Admin Interface
             </p>
           </div>
           <button
-            className="lg:hidden text-gray-500 hover:bg-gray-50 p-1 rounded-lg"
+            className="lg:hidden text-white/50 hover:text-white transition-colors"
             onClick={() => setIsSidebarOpen(false)}
           >
             <X size={24} />
@@ -145,7 +130,7 @@ const AdminLayout = () => {
         </div>
 
         {/* Navigation Menu */}
-        <nav className="space-y-1.5 overflow-y-auto max-h-[calc(100vh-200px)] pr-2 custom-scrollbar">
+        <nav className="space-y-2 overflow-y-auto max-h-[calc(100vh-250px)] pr-2 custom-scrollbar">
           {menuItems.map((item) => {
             const isActive = pathname === item.path;
             return (
@@ -153,71 +138,80 @@ const AdminLayout = () => {
                 key={item.path}
                 to={item.path}
                 onClick={() => setIsSidebarOpen(false)}
-                className={`flex items-center gap-3 px-5 py-3.5 rounded-2xl font-bold text-sm transition-all duration-200 ${
+                className={`flex items-center gap-4 px-6 py-4 transition-all duration-300 border border-transparent ${
                   isActive
-                    ? "bg-[#1F5E3B] text-white shadow-lg shadow-green-100"
-                    : "text-gray-500 hover:bg-[#F1F5F1] hover:text-[#1F5E3B]"
+                    ? "bg-white text-black font-bold italic"
+                    : "text-white/50 hover:text-white hover:bg-white/5"
                 }`}
               >
-                {item.icon}
-                {item.label}
+                <span className={isActive ? "scale-110" : ""}>{item.icon}</span>
+                <span className="text-xs uppercase tracking-widest">
+                  {item.label}
+                </span>
               </Link>
             );
           })}
         </nav>
 
         {/* Bottom Logout Area */}
-        <div className="absolute bottom-8 left-6 right-6">
+        <div className="absolute bottom-10 left-6 right-6">
           <button
             onClick={handleLogout}
             disabled={isLoggingOut}
-            className="flex items-center gap-3 px-5 py-3.5 w-full rounded-2xl font-bold text-sm text-red-500 hover:bg-red-50 transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-3 px-6 py-4 w-full border border-white/10 text-white/40 hover:text-red-400 hover:border-red-400/30 transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoggingOut ? (
-              <Loader2 size={20} className="animate-spin" />
+              <Loader2 size={18} className="animate-spin" />
             ) : (
               <LogOut
-                size={20}
-                className="group-hover:translate-x-1 transition-transform"
+                size={18}
+                className="group-hover:-translate-x-1 transition-transform"
               />
             )}
-            {isLoggingOut ? "Logging out..." : "Logout"}
+            <span className="text-[10px] uppercase tracking-[0.2em] font-bold">
+              {isLoggingOut ? "Processing..." : "Sign Out"}
+            </span>
           </button>
         </div>
       </aside>
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Top Header */}
-        <header className="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-6 lg:px-10 sticky top-0 z-30">
-          <div className="flex items-center gap-4">
+        {/* Top Header - Glassmorphism Dark */}
+        <header className="h-24 bg-[#0f0f0f]/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between px-8 lg:px-12 sticky top-0 z-30">
+          <div className="flex items-center gap-6">
             <button
-              className="lg:hidden p-2 text-gray-500 hover:bg-gray-100 rounded-xl transition-colors"
+              className="lg:hidden p-2 text-white/50 hover:text-white transition-colors"
               onClick={() => setIsSidebarOpen(true)}
             >
               <Menu size={24} />
             </button>
-            <h2 className="font-black text-[#1A2E1A] text-lg uppercase tracking-tight hidden sm:block">
-              Welcome Back, Admin
+            <h2 className="font-light text-white/80 text-sm uppercase tracking-[0.3em] hidden sm:block italic">
+              Dashboard /{" "}
+              <span className="text-white font-bold not-italic">
+                Management
+              </span>
             </h2>
           </div>
 
           {/* Profile Section */}
           <div className="flex items-center gap-4">
             <div className="text-right hidden md:block">
-              <p className="text-sm font-black text-[#1A2E1A]">{user?.name}</p>
-              <p className="text-[10px] text-[#1F5E3B] font-bold uppercase tracking-wider">
-                Super Admin
+              <p className="text-xs font-bold text-white tracking-widest uppercase">
+                {user?.name}
+              </p>
+              <p className="text-[9px] text-white/30 font-bold uppercase tracking-tighter">
+                Authorized Access
               </p>
             </div>
-            {/* <div className="w-12 h-12 rounded-2xl bg-[#F1F5F1] border border-gray-100 flex items-center justify-center text-[#1F5E3B] font-black shadow-sm">
-              <img src={user?.image} alt="" className="rounded-full"/>
-            </div> */}
+            <div className="w-10 h-10 bg-white/5 border border-white/10 flex items-center justify-center text-white italic font-black text-sm">
+              {user?.name?.charAt(0) || "A"}
+            </div>
           </div>
         </header>
 
         {/* Dynamic Outlet */}
-        <main className="p-4 md:p-8 lg:p-10 animate-in fade-in duration-500">
+        <main className="p-6 md:p-10 lg:p-12 animate-in fade-in duration-700">
           <Outlet />
         </main>
       </div>
