@@ -1,125 +1,178 @@
-import { removeFromCart, updateQuantity } from '@/redux/feature/cart/cartSlice';
-import { useAppDispatch, useAppSelector } from '@/redux/hook';
-import { Minus, Plus, Trash2 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { removeFromCart, updateQuantity } from "@/redux/feature/cart/cartSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const CartPage = () => {
   const { items } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const img_url = import.meta.env.VITE_API_URL
+ console.log(items)
+  const subtotal = items.reduce(
+    (acc, item) => acc + item.price * item.qty,
+    0
+  );
 
-  const subtotal = items.reduce((acc, item) => acc + (item.price * item.qty), 0);
-  const shipping = 0; 
+  const shipping = items.length > 0 ? 0 : 0;
   const grandTotal = subtotal + shipping;
 
   return (
-    <div className="min-h-screen bg-[#1d1d1d] text-white py-12 px-4 md:px-20 font-serif">
-      {/* Header */}
+    <div className="min-h-screen bg-[#121212] text-white py-14 px-4 md:px-24 font-serif">
+
+      {/* HEADER */}
       <div className="text-center mb-16">
-        <h1 className="text-4xl md:text-5xl italic mb-2">আপনার ব্যাগ - জাইন</h1>
-        <p className="text-gray-400 uppercase text-xs">ইন্দ্রিয়ের জন্য এক অনন্য আয়োজন</p>
+        <h1 className="text-4xl md:text-5xl italic mb-2">
+          আপনার শপিং ব্যাগ
+        </h1>
+        <p className="text-white/40 uppercase text-xs tracking-widest">
+          নির্বাচিত প্রিমিয়াম প্রোডাক্টসমূহ
+        </p>
       </div>
 
-      <div className="max-w-5xl mx-auto border-t border-gray-800">
-        {items.length > 0 ? (
-          items.map((item) => (
-            <div key={item.id} className="flex flex-col md:flex-row items-center py-10 border-b border-gray-800 gap-8">
-              {/* Product Image */}
-              <div className="w-40 h-48 bg-zinc-900 overflow-hidden shrink-0">
-                <img 
-                  src={item.img} 
-                  alt={item.name} 
-                  className="w-full h-full object-cover grayscale hover:grayscale-0 transition duration-500" 
-                />
-              </div>
+      <div className="container mx-auto border-t border-white/10">
 
-              {/* Product Details */}
-              <div className="flex-1 text-center md:text-left">
-                <h2 className="text-2xl mb-1">{item.name}</h2>
-                <p className="text-gray-500 text-sm mb-6">অয়েল • কনসেনট্রেটেড অয়েল</p>
-                
-                <div className="flex items-center justify-center md:justify-start gap-6">
-                  <div className="flex items-center border border-gray-700">
-                    <button 
-                      onClick={() => dispatch(updateQuantity({ id: item.id, delta: -1 }))}
-                      className="p-2 hover:bg-zinc-800 transition"
-                    >
-                      <Minus size={16} />
-                    </button>
-                    
-                    <span className="px-4 py-1 text-lg">{item.qty}</span>
-                    
-                    <button 
-                      onClick={() => dispatch(updateQuantity({ id: item.id, delta: 1 }))}
-                      className="p-2 hover:bg-zinc-800 transition"
-                    >
-                      <Plus size={16} />
-                    </button>
-                  </div>
+        {/* ================= EMPTY CART ================= */}
+        {items.length === 0 ? (
+          <div className="text-center py-28">
+            <ShoppingBag className="mx-auto mb-4 text-white/30" size={40} />
+            <p className="text-white/40 uppercase mb-6">
+              আপনার ব্যাগটি খালি
+            </p>
 
-                  <button 
-                    onClick={() => dispatch(removeFromCart(item.id))}
-                    className="text-gray-500 hover:text-red-400 text-xs uppercase flex items-center gap-1"
-                  >
-                    <Trash2 size={14} /> মুছে ফেলুন
-                  </button>
-                </div>
-              </div>
-
-              {/* Price */}
-              <div className="text-xl">
-                ৳{(item.price * item.qty).toLocaleString('bn-BD')}
-              </div>
-            </div>
-          ))
-        ) : (
-          <div className="text-center py-20">
-            <p className="text-gray-500 uppercase mb-6">আপনার ব্যাগটি খালি</p>
-            <button 
-              onClick={() => navigate('/shop')}
-              className="px-8 py-3 border border-gray-700 hover:bg-white hover:text-black transition uppercase text-xs"
+            <button
+              onClick={() => navigate("/shop")}
+              className="px-8 py-3 border border-white/20 hover:bg-white hover:text-black transition uppercase text-xs tracking-widest"
             >
               কেনাকাটা শুরু করুন
             </button>
           </div>
-        )}
-
-        {/* Summary Section */}
-        {items.length > 0 && (
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-12">
-            {/* Brand Promise */}
-            <div className="text-gray-400 text-sm space-y-4">
-              <h3 className="text-white italic text-lg">জাইন-এর প্রতিশ্রুতি</h3>
-              <p className="leading-relaxed">
-                প্রতিটি অয়েল আমাদের নিজস্ব অ্যাটেলিয়ারে হাতে ঢালা হয়। 
-                শিপিংয়ের আগে ৩-৫ দিন সময় দিন যাতে আমরা নিখুঁতভাবে আপনার পারফিউমটি প্রস্তুত করতে পারি।
-              </p>
-            </div>
-
-            {/* Totals */}
-            <div className="space-y-4">
-              <div className="flex justify-between text-sm uppercase text-gray-400">
-                <span>সাবটোটাল</span>
-                <span className="text-white">৳{subtotal.toLocaleString('bn-BD')}</span>
-              </div>
-              <div className="flex justify-between text-sm uppercase text-gray-400">
-                
-              </div>
-              <div className="border-t border-gray-800 pt-4 flex justify-between items-end">
-                <span className="text-2xl italic">মোট</span>
-                <span className="text-3xl text-yellow-500 font-light">
-                  ৳{grandTotal.toLocaleString('bn-BD')}
-                </span>
-              </div>
-              
-              <button 
-                onClick={() => navigate('/checkout')}
-                className="w-full bg-white text-black py-4 mt-6 uppercase font-bold hover:bg-gray-200 transition-colors"
+        ) : (
+          <>
+            {/* ================= ITEMS ================= */}
+            {items.map((item) => (
+              <div
+                key={item.id}
+                className="flex flex-col md:flex-row items-center justify-between py-10 border-b border-white/10 gap-8"
               >
-                চেকআউট করতে এগিয়ে যান
-              </button>
+                {/* IMAGE */}
+                <div className="w-36 h-44 bg-[#1a1a1a] overflow-hidden shrink-0 rounded-xl">
+                  <img
+                    // src={item.img || "/placeholder.png"}
+                    src={`${img_url}${item.img}`}
+                    alt={item.name}
+                    className="w-full h-full object-cover hover:scale-105 transition duration-500"
+                  />
+                </div>
+
+                {/* INFO */}
+                <div className="flex-1 text-center md:text-left space-y-2">
+                  <h2 className="text-xl">{item.name}</h2>
+
+                  <p className="text-white/40 text-xs uppercase tracking-widest">
+                    প্রিমিয়াম কালেকশন
+                  </p>
+
+                  {/* QUANTITY */}
+                  <div className="flex items-center justify-center md:justify-start gap-4 mt-4">
+
+                    <div className="flex items-center border border-white/10 rounded-lg overflow-hidden">
+                      <button
+                        onClick={() =>
+                          dispatch(
+                            updateQuantity({
+                              id: item.id,
+                              delta: -1,
+                            })
+                          )
+                        }
+                        className="p-2 hover:bg-white hover:text-black transition"
+                      >
+                        <Minus size={14} />
+                      </button>
+
+                      <span className="px-4 text-sm">
+                        {item.qty}
+                      </span>
+
+                      <button
+                        onClick={() =>
+                          dispatch(
+                            updateQuantity({
+                              id: item.id,
+                              delta: 1,
+                            })
+                          )
+                        }
+                        className="p-2 hover:bg-white hover:text-black transition"
+                      >
+                        <Plus size={14} />
+                      </button>
+                    </div>
+
+                    <button
+                      onClick={() => dispatch(removeFromCart(item.id))}
+                      className="flex items-center gap-1 text-white/40 hover:text-red-400 text-xs uppercase"
+                    >
+                      <Trash2 size={14} />
+                      সরান
+                    </button>
+                  </div>
+                </div>
+
+                {/* PRICE */}
+                <div className="text-lg font-semibold">
+                  ৳ {(item.price * item.qty).toLocaleString("bn-BD")}
+                </div>
+              </div>
+            ))}
+
+            {/* ================= SUMMARY ================= */}
+            <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-12">
+
+              {/* LEFT TEXT */}
+              <div className="text-white/40 text-sm space-y-4">
+                <h3 className="text-white text-lg italic">
+                  আমাদের প্রতিশ্রুতি
+                </h3>
+                <p className="leading-relaxed">
+                  প্রতিটি প্রোডাক্ট যত্নসহকারে নির্বাচন করা হয়। আপনার অর্ডার
+                  প্রসেস করার আগে আমরা গুণগত মান নিশ্চিত করি।
+                </p>
+              </div>
+
+              {/* RIGHT TOTAL */}
+              <div className="space-y-4">
+
+                <div className="flex justify-between text-sm text-white/40">
+                  <span>সাবটোটাল</span>
+                  <span className="text-white">
+                    ৳ {subtotal.toLocaleString("bn-BD")}
+                  </span>
+                </div>
+
+                {/* <div className="flex justify-between text-sm text-white/40">
+                  <span>শিপিং</span>
+                  <span className="text-white">ফ্রি</span>
+                </div> */}
+
+                <div className="border-t border-white/10 pt-4 flex justify-between items-end">
+                  <span className="text-2xl italic">মোট</span>
+                  <span className="text-3xl text-yellow-400 font-light">
+                    ৳ {grandTotal.toLocaleString("bn-BD")}
+                  </span>
+                </div>
+
+                <button
+                  onClick={() => navigate("/checkout")}
+                  className="w-full bg-white text-black py-4 mt-6 uppercase font-bold hover:bg-white/90 transition tracking-widest"
+                >
+                  চেকআউট করুন
+                </button>
+
+              </div>
             </div>
-          </div>
+          </>
         )}
       </div>
     </div>

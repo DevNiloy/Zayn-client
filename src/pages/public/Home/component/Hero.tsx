@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Button } from "@/components/ui/button";
 import banner from "../../../../../public/banner1.png";
+import { Link } from "react-router-dom";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -91,13 +92,16 @@ export const Hero = () => {
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
+         <Link to={'/shop'}>
           <Button className="bg-white text-black hover:bg-neutral-200 rounded-none px-14 py-7 text-xs -[0.2em] uppercase">
             কালেকশন দেখুন
-          </Button>
+          </Button></Link>
 
+          <Link to={'/about'}>
           <button className="text-[11px] uppercase -[0.3em] text-white/70 border-b border-white/10 pb-2 hover:text-white">
             আমাদের গল্প
           </button>
+          </Link>
         </div>
       </div>
 
