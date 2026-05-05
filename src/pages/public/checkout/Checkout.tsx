@@ -118,6 +118,7 @@ const CheckoutPage = () => {
       });
 
       const payload = {
+        name: formData.name,
         customer: formData,
         orderItems: items
           .filter((item) => isValidObjectId(String(item.id)))
