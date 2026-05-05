@@ -134,7 +134,7 @@ const Navbar = () => {
 
                 <DropdownMenuContent className="bg-black border border-white/10 text-white mt-2">
                   <DropdownMenuItem
-                    onClick={() => navigate("/dashboard")}
+                    onClick={() => navigate("/adminpannel")}
                     className="focus:bg-white/10 focus:text-white cursor-pointer"
                   >
                     Dashboard
@@ -153,12 +153,7 @@ const Navbar = () => {
                 <User size={20} strokeWidth={1} />
               </button>
             ) : (
-              <button
-                onClick={() => navigate("/auth")}
-                className="text-xs uppercase tracking-widest hover:text-white"
-              >
-                Login
-              </button>
+              ""
             )}
           </div>
 

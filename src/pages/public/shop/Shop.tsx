@@ -10,7 +10,7 @@ type Product = {
   title: string;
   price: number;
   images: string[];
-  slug:string
+  slug: string;
 };
 
 type Category = {
@@ -48,11 +48,7 @@ export default function Shop() {
     minPrice: priceRange[0],
     maxPrice: priceRange[1],
     sort:
-      sort === "low"
-        ? "priceLow"
-        : sort === "high"
-        ? "priceHigh"
-        : "newest",
+      sort === "low" ? "priceLow" : sort === "high" ? "priceHigh" : "newest",
     limit: LIMIT,
   }) as { data?: ApiResponse; isLoading: boolean; isFetching: boolean };
 
@@ -69,7 +65,7 @@ export default function Shop() {
       gsap.fromTo(
         ".card",
         { y: 25, opacity: 0 },
-        { y: 0, opacity: 1, stagger: 0.08, duration: 0.5 }
+        { y: 0, opacity: 1, stagger: 0.08, duration: 0.5 },
       );
     }
   }, [isFetching, category, page]);
@@ -98,15 +94,11 @@ export default function Shop() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0B0B0B] to-[#121212] text-white py-20 px-6">
-
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-12 gap-12">
-
+    <div className="min-h-screen  bg-gradient-to-b from-[#0B0B0B] to-[#121212] text-white py-20 px-6">
+      <div className="container mx-auto grid grid-cols-1 md:grid-cols-12 pt-10 gap-12">
         {/* ---------------- SIDEBAR ---------------- */}
         <aside className="md:col-span-3 hidden md:block">
-
           <div className="bg-[#151515] border border-white/5 rounded-2xl p-6 shadow-2xl backdrop-blur-xl">
-
             <h2 className="text-xs tracking-[0.3em] text-white/40 uppercase mb-8">
               কালেকশন
             </h2>
@@ -157,13 +149,11 @@ export default function Shop() {
                 className="range range-sm w-full accent-gray-500 "
               />
             </div>
-
           </div>
         </aside>
 
         {/* ---------------- MAIN ---------------- */}
         <main className="md:col-span-9">
-
           {/* HEADER */}
           <div className="flex justify-between items-end mb-12">
             <div>
@@ -195,11 +185,9 @@ export default function Shop() {
             <>
               {/* PRODUCTS */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-
                 {products.map((p) => (
                   <Link key={p._id} to={`/product/${p.slug}`}>
                     <div className="card group bg-[#151515] border border-white/5 rounded-2xl overflow-hidden hover:border-white/20 transition">
-
                       <div className="overflow-hidden">
                         <img
                           src={`http://localhost:5000${p.images?.[0]}`}
@@ -215,11 +203,9 @@ export default function Shop() {
                           ৳ {p.price}
                         </p>
                       </div>
-
                     </div>
                   </Link>
                 ))}
-
               </div>
 
               {/* EMPTY */}
@@ -232,7 +218,6 @@ export default function Shop() {
               {/* ---------------- PAGINATION ---------------- */}
               {totalPages > 1 && (
                 <div className="flex justify-center mt-20 items-center gap-3">
-
                   <button
                     disabled={page === 1}
                     onClick={() => goPage(page - 1)}
@@ -262,10 +247,8 @@ export default function Shop() {
                   >
                     <ChevronRight />
                   </button>
-
                 </div>
               )}
-
             </>
           )}
         </main>

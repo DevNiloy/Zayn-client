@@ -35,11 +35,11 @@ export const FeaturedSection = () => {
   const products = data?.data?.filter((p: any) => p.bestSeller);
 
   const mainProduct = products?.[0]; // 🔥 hero product
-  console.log(mainProduct)
-  const id = mainProduct?._id
-  const name = mainProduct?.title
-  const price = mainProduct?.price
-  const img = mainProduct?.images
+  console.log(mainProduct);
+  const id = mainProduct?._id;
+  const name = mainProduct?.title;
+  const price = mainProduct?.price;
+  const img = mainProduct?.images;
   // const restProducts = products?.slice(1);
 
   return (
@@ -71,7 +71,7 @@ export const FeaturedSection = () => {
               {/* Main Image */}
               <div className="relative overflow-hidden rounded-3xl border border-white/10">
                 <img
-                src={`${img_url}${mainProduct.images?.[0]}`}
+                  src={`${img_url}${mainProduct.images?.[0]}`}
                   className="w-full h-[520px] object-cover scale-105 group-hover:scale-115 transition duration-[2.5s] ease-out"
                 />
 
@@ -123,7 +123,10 @@ export const FeaturedSection = () => {
                 ৳ {mainProduct.price}
               </p>
 
-              <Link to={`http://localhost:5173/checkout?productId=${id}&name=${name}&price=${price}&img=${api_url}${img}`} className="cursor-pointer">
+              <Link
+                to={`https://zayn-bd.com/checkout?productId=${id}&name=${name}&price=${price}&img=${api_url}${img}`}
+                className="cursor-pointer"
+              >
                 <button className="flex items-center gap-3 text-xs uppercase text-white font-bold hover:gap-6 transition-all border-b border-white/20 pb-2 w-fit">
                   এখনই কিনুন <MoveRight size={16} />
                 </button>

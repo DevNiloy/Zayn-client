@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
- 
+
 import Swal from "sweetalert2"; // SweetAlert2 Import
 
 // AuthSlice path check korun
@@ -28,7 +28,7 @@ const AdminLayout = () => {
 
   // API Logout Mutation Hook
   const [logoutApi, { isLoading: isLoggingOut }] = useLogoutMutation();
-  const {data:user} = useGetMeQuery(undefined)
+  const { data: user } = useGetMeQuery(undefined);
   // console.log(user.image)
 
   // --- Logout Handler with SweetAlert2 ---
@@ -52,7 +52,6 @@ const AdminLayout = () => {
         await logoutApi(undefined).unwrap();
 
         // 2. Clear Redux Auth State (Client-side)
-        
 
         // 3. Clear Token from LocalStorage
         localStorage.removeItem("token");
@@ -69,9 +68,9 @@ const AdminLayout = () => {
         navigate("/", { replace: true });
       } catch (error: any) {
         console.error("Logout Error:", error);
-        
+
         // Error holeo safety-r jonno local state clear kore redirect kora bhalo
-        
+
         localStorage.removeItem("token");
         navigate("/");
 
@@ -86,15 +85,27 @@ const AdminLayout = () => {
     }
   };
 
-const menuItems = [
-  // index রাউটের জন্য সরাসরি বেস পাথ
-  // { icon: <LayoutDashboard size={20} />, label: "Overview", path: `/adminpannel` }, 
+  const menuItems = [
+    // index রাউটের জন্য সরাসরি বেস পাথ
+    // { icon: <LayoutDashboard size={20} />, label: "Overview", path: `/adminpannel` },
 
-  { icon: <PlusCircle size={20} />, label: "Add Product", path: `/adminpannel/add-product` },
-    { icon: <ShoppingBag size={20} />, label: "Orders", path: `/adminpannel/orders` },
-  { icon: <PlusCircle size={20} />, label: "All Product", path: `/adminpannel/all-product` },
-  { icon: <Layers size={20} />, label: "Add Categories", path: `/adminpannel/add-categories` },
-];
+    {
+      icon: <PlusCircle size={20} />,
+      label: "Add Product",
+      path: `/adminpannel/add-product`,
+    },
+    // { icon: <ShoppingBag size={20} />, label: "Orders", path: `/adminpannel/orders` },
+    {
+      icon: <PlusCircle size={20} />,
+      label: "All Product",
+      path: `/adminpannel/all-product`,
+    },
+    {
+      icon: <Layers size={20} />,
+      label: "Add Categories",
+      path: `/adminpannel/add-categories`,
+    },
+  ];
 
   return (
     <div className="flex min-h-screen bg-[#F8FAF8] font-sans">

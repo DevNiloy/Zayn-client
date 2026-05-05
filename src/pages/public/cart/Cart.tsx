@@ -7,38 +7,29 @@ const CartPage = () => {
   const { items } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const img_url = import.meta.env.VITE_API_URL
- console.log(items)
-  const subtotal = items.reduce(
-    (acc, item) => acc + item.price * item.qty,
-    0
-  );
+  const img_url = import.meta.env.VITE_API_URL;
+  console.log(items);
+  const subtotal = items.reduce((acc, item) => acc + item.price * item.qty, 0);
 
   const shipping = items.length > 0 ? 0 : 0;
   const grandTotal = subtotal + shipping;
 
   return (
-    <div className="min-h-screen bg-[#121212] text-white py-14 px-4 md:px-24 font-serif">
-
+    <div className="min-h-screen bg-[#121212] text-white  pt-28 pb-14 px-4 md:px-24 font-serif">
       {/* HEADER */}
       <div className="text-center mb-16">
-        <h1 className="text-4xl md:text-5xl italic mb-2">
-          আপনার শপিং ব্যাগ
-        </h1>
+        <h1 className="text-4xl md:text-5xl italic mb-2">আপনার শপিং ব্যাগ</h1>
         <p className="text-white/40 uppercase text-xs tracking-widest">
           নির্বাচিত প্রিমিয়াম প্রোডাক্টসমূহ
         </p>
       </div>
 
-      <div className="container mx-auto border-t border-white/10">
-
+      <div className="container mx-auto  border-t border-white/10">
         {/* ================= EMPTY CART ================= */}
         {items.length === 0 ? (
           <div className="text-center py-28">
             <ShoppingBag className="mx-auto mb-4 text-white/30" size={40} />
-            <p className="text-white/40 uppercase mb-6">
-              আপনার ব্যাগটি খালি
-            </p>
+            <p className="text-white/40 uppercase mb-6">আপনার ব্যাগটি খালি</p>
 
             <button
               onClick={() => navigate("/shop")}
@@ -75,7 +66,6 @@ const CartPage = () => {
 
                   {/* QUANTITY */}
                   <div className="flex items-center justify-center md:justify-start gap-4 mt-4">
-
                     <div className="flex items-center border border-white/10 rounded-lg overflow-hidden">
                       <button
                         onClick={() =>
@@ -83,7 +73,7 @@ const CartPage = () => {
                             updateQuantity({
                               id: item.id,
                               delta: -1,
-                            })
+                            }),
                           )
                         }
                         className="p-2 hover:bg-white hover:text-black transition"
@@ -91,9 +81,7 @@ const CartPage = () => {
                         <Minus size={14} />
                       </button>
 
-                      <span className="px-4 text-sm">
-                        {item.qty}
-                      </span>
+                      <span className="px-4 text-sm">{item.qty}</span>
 
                       <button
                         onClick={() =>
@@ -101,7 +89,7 @@ const CartPage = () => {
                             updateQuantity({
                               id: item.id,
                               delta: 1,
-                            })
+                            }),
                           )
                         }
                         className="p-2 hover:bg-white hover:text-black transition"
@@ -129,7 +117,6 @@ const CartPage = () => {
 
             {/* ================= SUMMARY ================= */}
             <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-12">
-
               {/* LEFT TEXT */}
               <div className="text-white/40 text-sm space-y-4">
                 <h3 className="text-white text-lg italic">
@@ -143,7 +130,6 @@ const CartPage = () => {
 
               {/* RIGHT TOTAL */}
               <div className="space-y-4">
-
                 <div className="flex justify-between text-sm text-white/40">
                   <span>সাবটোটাল</span>
                   <span className="text-white">
@@ -169,7 +155,6 @@ const CartPage = () => {
                 >
                   চেকআউট করুন
                 </button>
-
               </div>
             </div>
           </>

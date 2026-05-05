@@ -8,8 +8,25 @@ import { usePlaceOrderMutation } from "@/redux/api/orderApi";
 // ✅ MongoDB ObjectId check
 const isValidObjectId = (id: string) => /^[0-9a-fA-F]{24}$/.test(id);
 
+// --- Zara Vibe Dark Toast Configuration ---
+const zaraTheme = {
+  background: "#1d1d1d",
+  color: "#ffffff",
+  confirmButtonColor: "#ffffff",
+  cancelButtonColor: "transparent",
+  customClass: {
+    popup: "border border-gray-800 rounded-none shadow-2xl font-serif",
+    confirmButton:
+      "text-black bg-white px-8 py-3 rounded-none uppercase tracking-widest text-xs font-bold border-none",
+    cancelButton:
+      "text-white border border-gray-700 px-8 py-3 rounded-none uppercase tracking-widest text-xs font-bold ml-4",
+    title: "text-xl italic tracking-tight",
+  },
+  buttonsStyling: false,
+};
+
 const CheckoutPage = () => {
-  const img_url= import.meta.env.VITE_IMG_URL
+  const img_url = import.meta.env.VITE_IMG_URL;
   const { items } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -26,9 +43,11 @@ const CheckoutPage = () => {
     email: "",
   });
 
-  const [deliveryArea, setDeliveryArea] = useState<"inside" | "outside">("inside");
+  const [deliveryArea, setDeliveryArea] = useState<"inside" | "outside">(
+    "inside",
+  );
 
-  // ================= ADS FLOW (ONLY productId)
+  // ================= ADS FLOW
   useEffect(() => {
     const productId = searchParams.get("productId");
     const name = searchParams.get("name");
@@ -36,8 +55,6 @@ const CheckoutPage = () => {
     const img = searchParams.get("img");
 
     if (!productId || !name || !price) return;
-
-    // ❌ INVALID ID BLOCK
     if (!isValidObjectId(productId)) return;
 
     const exists = items.find((i) => i.id === productId);
@@ -50,7 +67,7 @@ const CheckoutPage = () => {
         price: Number(price),
         qty: 1,
         img: img || "",
-      })
+      }),
     );
   }, [searchParams]);
 
@@ -60,7 +77,7 @@ const CheckoutPage = () => {
   const grandTotal = subtotal + shippingCharge;
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -70,23 +87,34 @@ const CheckoutPage = () => {
     e.preventDefault();
 
     if (!items.length) {
-      return Swal.fire("কার্ট খালি", "প্রোডাক্ট যোগ করুন", "warning");
+      return Swal.fire({
+        ...zaraTheme,
+        title: "কার্ট খালি",
+        text: "প্রোডাক্ট যোগ করুন",
+        icon: "warning",
+        confirmButtonText: "ঠিক আছে",
+      });
     }
 
     const confirm = await Swal.fire({
+      ...zaraTheme,
       title: "আপনি কি নিশ্চিত?",
+      text: "অর্ডারটি কনফার্ম করতে চাচ্ছেন?",
       icon: "question",
       showCancelButton: true,
-      confirmButtonText: "হ্যাঁ",
+      confirmButtonText: "হ্যাঁ, কনফার্ম",
+      cancelButtonText: "না",
     });
 
     if (!confirm.isConfirmed) return;
 
     try {
       Swal.fire({
+        ...zaraTheme,
         title: "অর্ডার প্রসেস হচ্ছে...",
         didOpen: () => Swal.showLoading(),
         allowOutsideClick: false,
+        showConfirmButton: false,
       });
 
       const payload = {
@@ -113,20 +141,29 @@ const CheckoutPage = () => {
 
       await placeOrder(payload).unwrap();
 
-      Swal.fire("সফল!", "অর্ডার নেওয়া হয়েছে", "success");
+      Swal.fire({
+        ...zaraTheme,
+        icon: "success",
+        title: "সফল!",
+        text: "আপনার অর্ডারটি নেওয়া হয়েছে।",
+        confirmButtonText: "হোম পেজে যান",
+      });
 
       dispatch(clearCart());
       navigate("/");
     } catch (err) {
-      Swal.fire("Error", "অর্ডার ব্যর্থ হয়েছে", "error");
+      Swal.fire({
+        ...zaraTheme,
+        icon: "error",
+        title: "Error",
+        text: "অর্ডার ব্যর্থ হয়েছে। আবার চেষ্টা করুন।",
+      });
     }
   };
 
   return (
-    <div className="min-h-screen  bg-[#1d1d1d] text-white pt-24 px-4 md:px-20 font-serif">
-
+    <div className="min-h-screen bg-[#1d1d1d] text-white pt-24 px-4 md:px-20 font-serif">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
-
         {/* LEFT */}
         <div className="lg:col-span-7">
           <h1 className="text-3xl italic mb-8 border-b border-gray-800 pb-4">
@@ -134,83 +171,112 @@ const CheckoutPage = () => {
           </h1>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-
-            <input name="name" onChange={handleChange} placeholder="নাম" className="input" required />
-            <input name="phone" onChange={handleChange} placeholder="ফোন" className="input" required />
-            <textarea name="address" onChange={handleChange} placeholder="ঠিকানা" className="input" required />
+            <input
+              name="name"
+              onChange={handleChange}
+              placeholder="নাম"
+              className="input"
+              required
+            />
+            <input
+              name="phone"
+              onChange={handleChange}
+              placeholder="ফোন"
+              className="input"
+              required
+            />
+            <textarea
+              name="address"
+              onChange={handleChange}
+              placeholder="ঠিকানা"
+              className="input"
+              required
+            />
 
             <div className="grid grid-cols-2 gap-4">
-              <input name="city" onChange={handleChange} placeholder="শহর" className="input" />
-              <input name="zipCode" onChange={handleChange} placeholder="ZIP" className="input" />
+              <input
+                name="city"
+                onChange={handleChange}
+                placeholder="শহর"
+                className="input"
+              />
+              <input
+                name="zipCode"
+                onChange={handleChange}
+                placeholder="ZIP"
+                className="input"
+              />
             </div>
 
-            <input name="email" onChange={handleChange} placeholder="ইমেইল" className="input" />
+            <input
+              name="email"
+              onChange={handleChange}
+              placeholder="ইমেইল"
+              className="input"
+            />
 
             <div className="flex gap-3">
-              <button type="button" onClick={() => setDeliveryArea("inside")} className={`btn ${deliveryArea === "inside" ? "active" : ""}`}>
+              <button
+                type="button"
+                onClick={() => setDeliveryArea("inside")}
+                className={`btn ${deliveryArea === "inside" ? "active" : ""}`}
+              >
                 ঢাকা (৳70)
               </button>
-
-              <button type="button" onClick={() => setDeliveryArea("outside")} className={`btn ${deliveryArea === "outside" ? "active" : ""}`}>
+              <button
+                type="button"
+                onClick={() => setDeliveryArea("outside")}
+                className={`btn ${deliveryArea === "outside" ? "active" : ""}`}
+              >
                 বাইরে (৳120)
               </button>
             </div>
 
-            <button className="w-full bg-white text-black py-4 font-bold">
+            <button className="w-full bg-white text-black py-4 font-bold uppercase tracking-widest text-sm">
               অর্ডার কনফার্ম করুন
             </button>
-
           </form>
         </div>
 
         {/* RIGHT */}
         <div className="lg:col-span-5 bg-[#171717] p-6 border border-gray-800">
-
-          <h2 className="text-xl mb-6">অর্ডার সামারি</h2>
-
+          <h2 className="text-xl mb-6 italic">অর্ডার সামারি</h2>
           {items.map((item) => (
             <div key={item.id} className="flex gap-4 mb-6">
-
               <img
                 src={
                   item.img?.startsWith("http")
                     ? item.img
                     : item.img
-                    ? `${img_url}${item.img}`
-                    : "/placeholder.png"
+                      ? `${img_url}${item.img}`
+                      : "/placeholder.png"
                 }
-                className="w-20 h-24 object-cover"
+                className="w-20 h-24 object-cover border border-gray-800"
               />
-
               <div className="flex-1">
-                <p>{item.name}</p>
-                <p className="text-sm text-gray-400">Qty: {item.qty}</p>
+                <p className="tracking-wide">{item.name}</p>
+                <p className="text-sm text-gray-400 font-sans">
+                  Qty: {item.qty}
+                </p>
               </div>
-
-              <p>৳{item.price * item.qty}</p>
-
+              <p className="font-sans">৳{item.price * item.qty}</p>
             </div>
           ))}
 
-          <div className="border-t pt-4 space-y-2">
-
-            <div className="flex justify-between">
+          <div className="border-t border-gray-800 pt-4 space-y-2">
+            <div className="flex justify-between font-sans">
               <span>Subtotal</span>
               <span>৳{subtotal}</span>
             </div>
-
-            <div className="flex justify-between">
+            <div className="flex justify-between font-sans">
               <span>Shipping</span>
               <span>৳{shippingCharge}</span>
             </div>
-
-            <div className="flex justify-between text-xl font-bold">
+            <div className="flex justify-between text-xl font-bold font-sans pt-2">
               <span>Total</span>
               <span>৳{grandTotal}</span>
             </div>
-
           </div>
-
         </div>
       </div>
 
@@ -221,17 +287,29 @@ const CheckoutPage = () => {
           background: #111;
           border: 1px solid #333;
           outline: none;
+          color: white;
+          font-family: inherit;
+        }
+        .input::placeholder {
+            color: #555;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 1px;
         }
         .btn {
           padding: 10px 16px;
           border: 1px solid #444;
+          text-transform: uppercase;
+          font-size: 11px;
+          letter-spacing: 1px;
+          transition: all 0.3s ease;
         }
         .active {
           background: white;
           color: black;
+          border-color: white;
         }
       `}</style>
-
     </div>
   );
 };
