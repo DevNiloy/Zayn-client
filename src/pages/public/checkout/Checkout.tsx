@@ -27,9 +27,12 @@ const zaraTheme = {
 
 const CheckoutPage = () => {
   const img_url = import.meta.env.VITE_IMG_URL;
+
   const { items } = useAppSelector((state) => state.cart);
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
   const [searchParams] = useSearchParams();
 
   const [placeOrder] = usePlaceOrderMutation();
@@ -55,9 +58,11 @@ const CheckoutPage = () => {
     const img = searchParams.get("img");
 
     if (!productId || !name || !price) return;
+
     if (!isValidObjectId(productId)) return;
 
     const exists = items.find((i) => i.id === productId);
+
     if (exists) return;
 
     dispatch(
@@ -73,13 +78,18 @@ const CheckoutPage = () => {
 
   // ================= CALCULATION
   const subtotal = items.reduce((acc, item) => acc + item.price * item.qty, 0);
+
   const shippingCharge = deliveryArea === "inside" ? 70 : 120;
+
   const grandTotal = subtotal + shippingCharge;
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
   // ================= ORDER SUBMIT
@@ -126,6 +136,7 @@ const CheckoutPage = () => {
           city: formData.city,
           zipCode: formData.zipCode,
         },
+
         orderItems: items
           .filter((item) => isValidObjectId(String(item.id)))
           .map((item) => ({
@@ -135,14 +146,18 @@ const CheckoutPage = () => {
             image: item.img,
             product: item.id,
           })),
+
         shippingAddress: {
           address: formData.address,
           city: formData.city,
           postalCode: formData.zipCode,
           phone: formData.phone,
         },
+
         paymentMethod: "COD",
+
         totalPrice: grandTotal,
+
         deliveryArea,
       };
 
@@ -157,6 +172,7 @@ const CheckoutPage = () => {
       });
 
       dispatch(clearCart());
+
       navigate("/");
     } catch (err) {
       Swal.fire({
@@ -171,8 +187,54 @@ const CheckoutPage = () => {
   return (
     <div className="min-h-screen bg-[#1d1d1d] text-white pt-24 px-4 md:px-20 font-serif">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
+        {/* RIGHT - MOBILE FIRST */}
+        <div className="lg:col-span-5 bg-[#171717] p-6 border border-gray-800 order-1 lg:order-2">
+          <h2 className="text-xl mb-6 italic">অর্ডার সামারি</h2>
+
+          {items.map((item) => (
+            <div key={item.id} className="mb-10">
+              <img
+                src={
+                  item.img?.startsWith("http")
+                    ? item.img
+                    : item.img
+                      ? `${img_url}${item.img}`
+                      : "/placeholder.png"
+                }
+                className="w-full h-auto object-contain border border-gray-800 bg-black"
+              />
+
+              <div className="mt-4 space-y-2">
+                <p className="tracking-wide text-lg">{item.name}</p>
+
+                <div className="flex justify-between text-sm text-gray-400 font-sans">
+                  <span>Qty: {item.qty}</span>
+                  <span>৳{item.price * item.qty}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          <div className="border-t border-gray-800 pt-4 space-y-2">
+            <div className="flex justify-between font-sans">
+              <span>Subtotal</span>
+              <span>৳{subtotal}</span>
+            </div>
+
+            <div className="flex justify-between font-sans">
+              <span>Shipping</span>
+              <span>৳{shippingCharge}</span>
+            </div>
+
+            <div className="flex justify-between text-xl font-bold font-sans pt-2">
+              <span>Total</span>
+              <span>৳{grandTotal}</span>
+            </div>
+          </div>
+        </div>
+
         {/* LEFT */}
-        <div className="lg:col-span-7">
+        <div className="lg:col-span-7 order-2 lg:order-1">
           <h1 className="text-3xl italic mb-8 border-b border-gray-800 pb-4">
             চেকআউট
           </h1>
@@ -185,6 +247,7 @@ const CheckoutPage = () => {
               className="input"
               required
             />
+
             <input
               name="phone"
               onChange={handleChange}
@@ -192,6 +255,7 @@ const CheckoutPage = () => {
               className="input"
               required
             />
+
             <textarea
               name="address"
               onChange={handleChange}
@@ -207,6 +271,7 @@ const CheckoutPage = () => {
                 placeholder="শহর"
                 className="input"
               />
+
               <input
                 name="zipCode"
                 onChange={handleChange}
@@ -230,6 +295,7 @@ const CheckoutPage = () => {
               >
                 ঢাকা (৳70)
               </button>
+
               <button
                 type="button"
                 onClick={() => setDeliveryArea("outside")}
@@ -244,47 +310,6 @@ const CheckoutPage = () => {
             </button>
           </form>
         </div>
-
-        {/* RIGHT */}
-        <div className="lg:col-span-5 bg-[#171717] p-6 border border-gray-800">
-          <h2 className="text-xl mb-6 italic">অর্ডার সামারি</h2>
-          {items.map((item) => (
-            <div key={item.id} className="flex gap-4 mb-6">
-              <img
-                src={
-                  item.img?.startsWith("http")
-                    ? item.img
-                    : item.img
-                      ? `${img_url}${item.img}`
-                      : "/placeholder.png"
-                }
-                className="w-20 h-24 object-cover border border-gray-800"
-              />
-              <div className="flex-1">
-                <p className="tracking-wide">{item.name}</p>
-                <p className="text-sm text-gray-400 font-sans">
-                  Qty: {item.qty}
-                </p>
-              </div>
-              <p className="font-sans">৳{item.price * item.qty}</p>
-            </div>
-          ))}
-
-          <div className="border-t border-gray-800 pt-4 space-y-2">
-            <div className="flex justify-between font-sans">
-              <span>Subtotal</span>
-              <span>৳{subtotal}</span>
-            </div>
-            <div className="flex justify-between font-sans">
-              <span>Shipping</span>
-              <span>৳{shippingCharge}</span>
-            </div>
-            <div className="flex justify-between text-xl font-bold font-sans pt-2">
-              <span>Total</span>
-              <span>৳{grandTotal}</span>
-            </div>
-          </div>
-        </div>
       </div>
 
       <style>{`
@@ -297,12 +322,14 @@ const CheckoutPage = () => {
           color: white;
           font-family: inherit;
         }
+
         .input::placeholder {
-            color: #555;
-            text-transform: uppercase;
-            font-size: 11px;
-            letter-spacing: 1px;
+          color: #555;
+          text-transform: uppercase;
+          font-size: 11px;
+          letter-spacing: 1px;
         }
+
         .btn {
           padding: 10px 16px;
           border: 1px solid #444;
@@ -311,6 +338,7 @@ const CheckoutPage = () => {
           letter-spacing: 1px;
           transition: all 0.3s ease;
         }
+
         .active {
           background: white;
           color: black;
